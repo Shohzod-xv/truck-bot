@@ -1,21 +1,16 @@
 <?php
-
 function tx($shart){
     global $tx;
     return $tx == $shart;
 }
-function data($shart){
-    global $data;
-    return $data == $shart;
+function admin($chatID){
+    $db = query("Select status from users WHERE user_id = '$chatID'");
+    foreach ($db as $item):
+        return $item['status'];
+    endforeach;
 }
 function admin_list($chat_id){
     $admin = query("SELECT user_id FROM `users` where status = 'admin' && `user_id` = '{$chat_id}'");
-    foreach ($admin as $item):
-        return $item['user_id'];
-    endforeach;
-}
-function admin_all(){
-    $admin = query("SELECT user_id FROM `users` where status = 'admin'");
     foreach ($admin as $item):
         return $item['user_id'];
     endforeach;
@@ -37,9 +32,6 @@ function query($sorov){
     global $conn;
     return mysqli_query($conn,$sorov);
 }
-function fetch_array($var){
-    return mysqli_fetch_assoc($var);
-}
 function check_user($user_id){
     $a = query("SELECT * FROM `users` WHERE `user_id` = '{$user_id}'");
     if (mysqli_num_rows($a) == 0)
@@ -58,14 +50,6 @@ function check_driver($chatId)
 function check_client($chatId)
 {
     $a = query("SELECT * FROM `client` WHERE `user_id` = '{$chatId}'");
-    if (mysqli_num_rows($a) == 0)
-        return false;
-    else
-        return true;
-}
-function check_second_client_data($chatId)
-{
-    $a = query("SELECT * FROM `second_client_data` WHERE `user_id` = '{$chatId}'");
     if (mysqli_num_rows($a) == 0)
         return false;
     else
@@ -113,93 +97,6 @@ function home($chat_id)
         ]),
         'parse_mode' => "html"
     ]);
-}
-class user_data{
-    public function send_loc($chat_id){
-       $db = query("SELECT `send_loc` FROM `client` WHERE `user_id` = '{$chat_id}'");
-       foreach ($db as $item):
-           return $item['send_loc'];
-       endforeach;
-    }
-    public function user_id($chat_id){
-        $db = query("SELECT `user_id` FROM `client` WHERE `user_id` = '{$chat_id}'");
-        foreach ($db as $item):
-            return $item['user_id'];
-        endforeach;
-    }
-    public function next_loc($chat_id){
-        $db = query("SELECT `next_loc` FROM `client` WHERE `user_id` = '{$chat_id}'");
-        foreach ($db as $item):
-            return $item['next_loc'];
-        endforeach;
-    }
-    /** function auto_type foreach return auto_type */
-    public function auto_type($chat_id)
-    {
-        $db = query("SELECT `auto_type` FROM `client` WHERE `user_id` = '{$chat_id}'");
-        foreach ($db as $item):
-            return $item['auto_type'];
-        endforeach;
-    }
-    /** function auto_hajm foreach return auto_hajm */
-    public function auto_hajm($chat_id)
-    {
-        $db = query("SELECT `auto_hajm` FROM `client` WHERE `user_id` = '{$chat_id}'");
-        foreach ($db as $item):
-            return $item['auto_hajm'];
-        endforeach;
-    }
-    public function number($chat_id)
-    {
-        $db = query("SELECT `number` FROM `client` WHERE `user_id` = '{$chat_id}'");
-        foreach ($db as $item):
-            return $item['number'];
-        endforeach;
-    }
-}
-class driver_data{
-    public function fio($chat_id){
-        $db = query("SELECT * FROM `driver` WHERE `user_id` = '{$chat_id}'");
-        foreach ($db as $item):
-            return $item['fio'];
-        endforeach;
-    }
-    public function phone($chat_id){
-        $db = query("SELECT * FROM `driver` WHERE `user_id` = '{$chat_id}'");
-        foreach ($db as $item):
-            return $item['number'];
-        endforeach;
-    }
-    public function auto_type($chat_id){
-        $db = query("SELECT * FROM `driver` WHERE `user_id` = '{$chat_id}'");
-        foreach ($db as $item):
-            return $item['auto_type'];
-        endforeach;
-    }
-    public function auto_hajm($chat_id){
-        $db = query("SELECT * FROM `driver` WHERE `user_id` = '{$chat_id}'");
-        foreach ($db as $item):
-            return $item['auto_hajm'];
-        endforeach;
-    }
-    public function auto_number($chat_id){
-        $db = query("SELECT * FROM `driver` WHERE `user_id` = '{$chat_id}'");
-        foreach ($db as $item):
-            return $item['auto_number'];
-        endforeach;
-    }
-    public function send_loc($chat_id){
-        $db = query("SELECT * FROM `client` WHERE `user_id` = '{$chat_id}'");
-        foreach ($db as $item):
-            return $item['send_loc'];
-        endforeach;
-    }
-    public function next_loc($chat_id){
-        $db = query("SELECT * FROM `driver` WHERE `user_id` = '{$chat_id}'");
-        foreach ($db as $item):
-            return $item['next_loc'];
-        endforeach;
-    }
 }
 function anketa($chatId)
 {
@@ -268,14 +165,6 @@ function Otmen($chatId){
         ])
     ]);
 }
-
-function rol($chatId){
-    $db = query("Select * from second_client_data where user_id={$chatId} ORDER BY id DESC LIMIT 1;");
-    foreach ($db as $item):
-        return $item['rol'];
-    endforeach;
-}
-
 function auto_number($tx){
     if (substr($tx, 0, 2) == ("01" || "10" || "20" || "30" || "40" || "50" || "60" || "70" || "80" || "90" || "95") && (strlen($tx) == 8)){
         return true;
@@ -294,4 +183,47 @@ function next_loc($chatId){
     foreach ($db as $item):
         return $item['next_loc'];
     endforeach;
+}
+class user_data{
+    public function send_loc($chat_id){
+        $db = query("SELECT `send_loc` FROM `client` WHERE `user_id` = '{$chat_id}'");
+        foreach ($db as $item):
+            return $item['send_loc'];
+        endforeach;
+    }
+    public function user_id($chat_id){
+        $db = query("SELECT `user_id` FROM `client` WHERE `user_id` = '{$chat_id}'");
+        foreach ($db as $item):
+            return $item['user_id'];
+        endforeach;
+    }
+    public function next_loc($chat_id){
+        $db = query("SELECT `next_loc` FROM `client` WHERE `user_id` = '{$chat_id}'");
+        foreach ($db as $item):
+            return $item['next_loc'];
+        endforeach;
+    }
+    /** function auto_type foreach return auto_type */
+    public function auto_type($chat_id)
+    {
+        $db = query("SELECT `auto_type` FROM `client` WHERE `user_id` = '{$chat_id}'");
+        foreach ($db as $item):
+            return $item['auto_type'];
+        endforeach;
+    }
+    /** function auto_hajm foreach return auto_hajm */
+    public function auto_hajm($chat_id)
+    {
+        $db = query("SELECT `auto_hajm` FROM `client` WHERE `user_id` = '{$chat_id}'");
+        foreach ($db as $item):
+            return $item['auto_hajm'];
+        endforeach;
+    }
+    public function number($chat_id)
+    {
+        $db = query("SELECT `number` FROM `client` WHERE `user_id` = '{$chat_id}'");
+        foreach ($db as $item):
+            return $item['number'];
+        endforeach;
+    }
 }

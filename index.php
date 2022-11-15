@@ -736,7 +736,8 @@ Yuk hajmi: <b>$auto_hajm</b>
             ]);
         }
     }
-}elseif ($data == "ozgartirish"){
+}
+elseif ($data == "ozgartirish"){
     bot('editMessageText', [
         'chat_id' => $cbid,
         'message_id' => $mid,
@@ -818,24 +819,20 @@ if (($data == "send_all_data") && admin($cbid) == "admin"){
         }else{
             bot('sendMessage', [
                 'chat_id' => $id,
-                'text' => "*📍 $send_loc -> $next_loc*\n🚚 $auto_type -- $auto_hajm\n*📞 $number*\n\nHaydovchi kerak shu raqamga bog'laning",
+                'text' => "*#haydovchi_kerak*\n🚚 $auto_type -- $auto_hajm\n\n*📍 $send_loc -> $next_loc*",
                 'parse_mode' => "markdown",
+                'reply_markup' => json_encode([
+                    'inline_keyboard' => [
+                        [['text' => "📞 Bog'lanish", 'url' => "http://twit.uz/Jalolbek/Site/?tel=+$number"]]
+                    ]
+                ])
             ]);
         }
     }
     if (admin_list($cbid) == "admin"):
         query("Update second_client_data Set `status` = 'Yuborilgan xabar' where user_id = '$cbid' ORDER BY id DESC LIMIT 1");
-//        query("Update second_client_data Set `status` = null where user_id = '$cbid'");
     endif;
-//    query("Update users Set `status` = null where user_id = admin_list($chatId)");
 }
-function admin($chatID){
-    $db = query("Select status from users WHERE user_id = '$chatID'");
-    foreach ($db as $item):
-        return $item['status'];
-    endforeach;
-}
-
 if ($tx == "/drivers" and admin($chatId) == "admin"){
     $db = query("Select * from driver");
     foreach ($db as $item) {
